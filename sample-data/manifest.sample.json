@@ -52,7 +52,7 @@
       "rendered_pages": [
         1
       ],
-      "sub_type": "???"
+      "sub_type": "电缆表"
     },
     "SAMPLE-JBXX": {
       "doc_id": "SAMPLE-JBXX",
@@ -70,7 +70,7 @@
     }
   },
   "tags": {
-    "04FE-00001": [
+    "04FE-02025": [
       {
         "type": "datasheet",
         "doc_id": "SAMPLE-DATASHEET-F",
@@ -84,11 +84,11 @@
         "pages": [
           1
         ],
-        "x": 0.42,
-        "y": 0.38,
-        "location_floor": "??????",
-        "location_floor_el": "EL+8.00",
-        "location_floor_name": "??????",
+        "x": 0.63,
+        "y": 0.42,
+        "location_floor": "酸脱1#框架三楼 EL-0.150",
+        "location_floor_el": "EL-0.150",
+        "location_floor_name": "酸脱1#框架三楼",
         "location_floor_source": "synthetic sample"
       },
       {
@@ -125,7 +125,7 @@
         "pages": [
           1
         ],
-        "sub_type": "???"
+        "sub_type": "电缆表"
       },
       {
         "type": "jbxx",
@@ -135,7 +135,7 @@
         ]
       }
     ],
-    "03GT-00001": [
+    "03GT-01002": [
       {
         "type": "datasheet",
         "doc_id": "SAMPLE-DATASHEET-F",
@@ -151,7 +151,7 @@
         ]
       }
     ],
-    "04PG-00001": [
+    "04PG-09016": [
       {
         "type": "datasheet",
         "doc_id": "SAMPLE-DATASHEET-F",
@@ -169,44 +169,44 @@
     ]
   },
   "tag_meta": {
-    "04FE-00001": {
-      "desc": "????????",
+    "04FE-02025": {
+      "desc": "至04E0207B壳程入口富甲醇流量传感元件",
       "unit": "m3/h",
       "lo": 0,
-      "hi": 100,
-      "group_key": "04F-00001",
-      "sigtype": "??(4mA?20mA)",
-      "sqroot": "??"
+      "hi": 400,
+      "group_key": "04F-02025",
+      "sigtype": "模拟量(4mA~20mA)",
+      "sqroot": "是"
     },
-    "04FI-00001": {
-      "desc": "??????",
+    "04FI-02025": {
+      "desc": "至04E0207B壳程入口富甲醇流量指示",
       "unit": "m3/h",
       "lo": 0,
-      "hi": 100,
-      "group_key": "04F-00001"
+      "hi": 400,
+      "group_key": "04F-02025"
     },
-    "04FT-00001": {
-      "desc": "???????",
+    "04FT-02025": {
+      "desc": "至04E0207B壳程入口富甲醇流量变送器",
       "unit": "m3/h",
       "lo": 0,
-      "hi": 100,
-      "group_key": "04F-00001"
+      "hi": 400,
+      "group_key": "04F-02025"
     },
-    "03GT-00001": {
-      "desc": "???????",
+    "03GT-01002": {
+      "desc": "气化装置合成气中CO含量检测",
       "unit": "ppm",
       "lo": 0,
       "hi": 100
     },
-    "04PG-00001": {
-      "desc": "???????",
+    "04PG-09016": {
+      "desc": "仪表空气进界区就地压力",
       "unit": "MPa",
       "lo": 0,
       "hi": 1
     }
   },
   "manuals": {
-    "?????": [
+    "转子流量计说明书": [
       {
         "name": "sample_manual.pdf",
         "source_pdf": "sample_manual.pdf",
