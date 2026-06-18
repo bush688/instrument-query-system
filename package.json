@@ -1,0 +1,14 @@
+{
+  "name": "instrument-query-system",
+  "version": "0.1.0",
+  "private": false,
+  "description": "Cloudflare Worker based instrument tag and document query system with synthetic sample data.",
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy"
+  },
+  "devDependencies": {
+    "wrangler": "^4.81.1"
+  }
+}

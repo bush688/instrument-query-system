@@ -1,0 +1,47 @@
+# Dependencies
+node_modules/
+
+# Cloudflare local state
+.wrangler/
+.dev.vars
+
+# Secrets and environment
+.env
+.env.*
+!.env.example
+.r2_credentials
+*credentials*
+*secret*
+*token*
+
+# Production/generated data
+cf_manifest.json
+cf_upload_list.txt
+gds_upload_list.txt
+uploaded.txt
+upload_log.txt
+tmp_*/
+outputs/
+logs/
+_ops/
+.codex-remote-attachments/
+
+# Local verification artifacts
+tmp_*.json
+tmp_*.jpg
+tmp_*.png
+tmp_*.pdf
+tmp_*.xlsx
+*.log
+
+# Python/Node caches
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# OS/editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+

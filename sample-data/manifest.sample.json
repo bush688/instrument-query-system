@@ -1,0 +1,222 @@
+{
+  "version": "sample-20260618",
+  "generated_at": "2026-06-18T00:00:00",
+  "updated_at": "2026-06-18T00:00:00",
+  "docs": {
+    "SAMPLE-DATASHEET-F": {
+      "doc_id": "SAMPLE-DATASHEET-F",
+      "source_pdf": "sample_datasheet.pdf",
+      "rendered_pages": [
+        1
+      ]
+    },
+    "SAMPLE-LOCATION-IN40-P1": {
+      "doc_id": "SAMPLE-LOCATION-IN40-P1",
+      "drawing_dir": "SAMPLE-LOCATION-IN40-P1",
+      "source_pdf": "sample_location_map.pdf",
+      "rendered_pages": [
+        1
+      ]
+    },
+    "SAMPLE-FLOWCALC": {
+      "doc_id": "SAMPLE-FLOWCALC",
+      "source_pdf": "sample_flow_calculation.pdf",
+      "rendered_pages": [
+        1
+      ]
+    },
+    "SAMPLE-VENDOR": {
+      "doc_id": "SAMPLE-VENDOR",
+      "source_pdf": "sample_vendor_document.pdf",
+      "rendered_pages": [
+        1
+      ]
+    },
+    "SAMPLE-MONITORING": {
+      "doc_id": "SAMPLE-MONITORING",
+      "source_pdf": "sample_monitoring_table.pdf",
+      "rendered_pages": [
+        1
+      ]
+    },
+    "SAMPLE-DCS": {
+      "doc_id": "SAMPLE-DCS",
+      "source_pdf": "sample_dcs_program.pdf",
+      "rendered_pages": [
+        1
+      ]
+    },
+    "SAMPLE-REFERENCE-CABLE": {
+      "doc_id": "SAMPLE-REFERENCE-CABLE",
+      "source_pdf": "sample_cable_table.pdf",
+      "rendered_pages": [
+        1
+      ],
+      "sub_type": "???"
+    },
+    "SAMPLE-JBXX": {
+      "doc_id": "SAMPLE-JBXX",
+      "source_pdf": "sample_loop_wiring.xlsx",
+      "rendered_pages": [
+        1
+      ]
+    },
+    "SAMPLE-GDS": {
+      "doc_id": "SAMPLE-GDS",
+      "source_pdf": "sample_gds.pdf",
+      "rendered_pages": [
+        1
+      ]
+    }
+  },
+  "tags": {
+    "04FE-00001": [
+      {
+        "type": "datasheet",
+        "doc_id": "SAMPLE-DATASHEET-F",
+        "pages": [
+          1
+        ]
+      },
+      {
+        "type": "location",
+        "doc_id": "SAMPLE-LOCATION-IN40-P1",
+        "pages": [
+          1
+        ],
+        "x": 0.42,
+        "y": 0.38,
+        "location_floor": "??????",
+        "location_floor_el": "EL+8.00",
+        "location_floor_name": "??????",
+        "location_floor_source": "synthetic sample"
+      },
+      {
+        "type": "flowcalc",
+        "doc_id": "SAMPLE-FLOWCALC",
+        "pages": [
+          1
+        ]
+      },
+      {
+        "type": "vendor",
+        "doc_id": "SAMPLE-VENDOR",
+        "pages": [
+          1
+        ]
+      },
+      {
+        "type": "monitoring",
+        "doc_id": "SAMPLE-MONITORING",
+        "pages": [
+          1
+        ]
+      },
+      {
+        "type": "dcs",
+        "doc_id": "SAMPLE-DCS",
+        "pages": [
+          1
+        ]
+      },
+      {
+        "type": "reference",
+        "doc_id": "SAMPLE-REFERENCE-CABLE",
+        "pages": [
+          1
+        ],
+        "sub_type": "???"
+      },
+      {
+        "type": "jbxx",
+        "doc_id": "SAMPLE-JBXX",
+        "pages": [
+          1
+        ]
+      }
+    ],
+    "03GT-00001": [
+      {
+        "type": "datasheet",
+        "doc_id": "SAMPLE-DATASHEET-F",
+        "pages": [
+          1
+        ]
+      },
+      {
+        "type": "gds",
+        "doc_id": "SAMPLE-GDS",
+        "pages": [
+          1
+        ]
+      }
+    ],
+    "04PG-00001": [
+      {
+        "type": "datasheet",
+        "doc_id": "SAMPLE-DATASHEET-F",
+        "pages": [
+          1
+        ]
+      },
+      {
+        "type": "vendor",
+        "doc_id": "SAMPLE-VENDOR",
+        "pages": [
+          1
+        ]
+      }
+    ]
+  },
+  "tag_meta": {
+    "04FE-00001": {
+      "desc": "????????",
+      "unit": "m3/h",
+      "lo": 0,
+      "hi": 100,
+      "group_key": "04F-00001",
+      "sigtype": "??(4mA?20mA)",
+      "sqroot": "??"
+    },
+    "04FI-00001": {
+      "desc": "??????",
+      "unit": "m3/h",
+      "lo": 0,
+      "hi": 100,
+      "group_key": "04F-00001"
+    },
+    "04FT-00001": {
+      "desc": "???????",
+      "unit": "m3/h",
+      "lo": 0,
+      "hi": 100,
+      "group_key": "04F-00001"
+    },
+    "03GT-00001": {
+      "desc": "???????",
+      "unit": "ppm",
+      "lo": 0,
+      "hi": 100
+    },
+    "04PG-00001": {
+      "desc": "???????",
+      "unit": "MPa",
+      "lo": 0,
+      "hi": 1
+    }
+  },
+  "manuals": {
+    "?????": [
+      {
+        "name": "sample_manual.pdf",
+        "source_pdf": "sample_manual.pdf",
+        "pages": [
+          1
+        ],
+        "page_urls": [
+          "/files/SAMPLE-MANUAL/page01.jpg"
+        ]
+      }
+    ]
+  }
+}
