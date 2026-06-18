@@ -45,53 +45,41 @@ The goal is simple: enter a tag number or description, then view all related doc
 
 ## 图文介绍 / Visual Walkthrough
 
-下面图片均为合成样本，用于说明系统支持的资料类型，不包含真实生产数据。
+下面图片均为合成界面示意图，用于说明系统交互和资料组织方式，不包含真实生产数据。
 
-The following images are synthetic samples. They demonstrate supported document types without exposing production data.
+The following images are synthetic UI illustrations. They demonstrate the interaction model and document organization without exposing production data.
 
-### 1. 数据表 / Datasheet
+### 1. 搜索与装置目录 / Search and Device Directory
 
-仪表数据表用于查看量程、量纲、信号类型、开方、报警等基础参数。
+用户可以按位号、局部编号或中文描述搜索。结果卡片展示位号、描述、量程、楼层和已有资料类型。
 
-Datasheets provide range, unit, signal type, square-root extraction, alarm settings, and other core parameters.
+Users can search by tag number, partial number, or Chinese description. Result cards show the tag, description, range, floor, and available document types.
 
-![Synthetic datasheet sample](sample-data/files/SAMPLE-DATASHEET-F/page01.jpg)
+![Synthetic search overview](docs/images/readme-search-overview.png)
 
-### 2. 位置图 / Position Map
+### 2. 位号详情 / Instrument Detail
 
-位置图用于定位仪表所在图纸、楼层/标高以及图中坐标。生产系统中会把 `x/y` 坐标写入 manifest，并在前端显示定位点。
+详情页把同一回路的关联信号、点表参数和资料入口集中到一个页面。流量仪表支持 `F / FE / FT / FI` 同组展示；就地表 `PG / TG / LG` 不会错误继承远传仪表位置。
 
-Position maps locate the instrument on the drawing, including floor/elevation and normalized `x/y` coordinates stored in the manifest.
+The detail view combines related loop signals, tag metadata, and document tabs. Flow tags such as `F / FE / FT / FI` are grouped for lookup, while local gauges such as `PG / TG / LG` do not inherit remote transmitter locations.
 
-![Synthetic position map sample](sample-data/files/SAMPLE-LOCATION-IN40-P1/page01.jpg)
+![Synthetic detail view](docs/images/readme-detail-view.png)
 
-### 3. 流量计算书 / Flow Calculation Sheet
+### 3. 位置图定位 / Position Map Marker
 
-流量计计算书作为 `flowcalc` 类型资料挂到位号下。系统支持保留旧计算书，同时追加修改版计算书。
+位置图资料保存图纸页、楼层/标高和归一化坐标。前端根据 `x/y` 坐标在图上显示定位点。
 
-Flow calculation sheets are attached as `flowcalc` documents. The system can keep original calculation sheets while adding revised versions.
+Position-map records store the drawing page, floor/elevation, and normalized coordinates. The frontend renders the marker using the stored `x/y` coordinates.
 
-![Synthetic flow calculation sample](sample-data/files/SAMPLE-FLOWCALC/page01.jpg)
+![Synthetic position map marker](docs/images/readme-position-map.png)
 
-### 4. DCS 与监控资料 / DCS and Monitoring Documents
+### 4. 多类型资料预览 / Document Preview
 
-DCS 程序、监控数据表、IO 表等可作为独立 tab 展示，便于从同一个位号入口追踪控制系统资料。
+同一个位号可以挂接数据表、监控数据表、DCS 程序、回路接线图、流量计算书、厂家资料和说明书。系统统一把这些资料渲染成可预览页面。
 
-DCS programs, monitoring tables, and IO tables are shown as separate tabs so control-system documents can be reached from the same tag entry.
+The same tag can link to datasheets, monitoring tables, DCS programs, loop wiring drawings, flow calculation sheets, vendor documents, and manuals. The system renders them into previewable pages.
 
-![Synthetic DCS sample](sample-data/files/SAMPLE-DCS/page01.jpg)
-
-![Synthetic monitoring sample](sample-data/files/SAMPLE-MONITORING/page01.jpg)
-
-### 5. 回路接线与厂家资料 / Loop Wiring and Vendor Documents
-
-回路接线图、厂家资料、安装尺寸图和说明书等都通过统一文档引用模型进入位号详情页。
-
-Loop wiring drawings, vendor documents, installation drawings, and manuals all use the same document-reference model in the instrument detail view.
-
-![Synthetic loop wiring sample](sample-data/files/SAMPLE-JBXX/page01.jpg)
-
-![Synthetic vendor document sample](sample-data/files/SAMPLE-VENDOR/page01.jpg)
+![Synthetic document preview](docs/images/readme-document-preview.png)
 
 ## 系统架构 / Architecture
 
