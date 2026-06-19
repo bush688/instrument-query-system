@@ -458,7 +458,7 @@ body.ui-lock{overflow:hidden}
 (function(){
 'use strict';
 
-var T=null, detail=null, tabs=[], tab=0, panelTagName='', _searchDeviceFilter='', _searchDeviceCounts=[], _searchSeq=0;
+var T=null, detail=null, tabs=[], tab=0, panelTagName='', _searchDeviceFilter='', _searchDeviceCounts=[], _searchSeq=0, _searchAbort=null;
 
 /* helpers */
 function $$(id){return document.getElementById(id)}
@@ -506,16 +506,20 @@ function clearQ(){
 }
 window.clearQ=clearQ;
 
-function fetchSearchJson(url, retried){
-  return fetch(url+(retried?(url.indexOf('?')>=0?'&':'?')+'_ts='+Date.now():''), { cache:'no-store' })
+function fetchSearchJson(url, attempt, signal){
+  var retryParam = attempt ? ((url.indexOf('?')>=0?'&':'?')+'_ts='+Date.now()+'&try='+attempt) : '';
+  return fetch(url+retryParam, { cache:'no-store', signal:signal })
     .then(function(r){
       if(!r.ok)throw new Error('search http '+r.status);
       return r.json();
     })
     .catch(function(e){
-      if(!retried){
+      if(e && e.name === 'AbortError') throw e;
+      if(attempt < 2){
         console.warn('search retry after failure', e);
-        return fetchSearchJson(url, true);
+        return new Promise(function(resolve){
+          setTimeout(resolve, attempt ? 1200 : 450);
+        }).then(function(){ return fetchSearchJson(url, attempt + 1, signal); });
       }
       throw e;
     });
@@ -523,9 +527,12 @@ function fetchSearchJson(url, retried){
 
 function doSearch(q){
   var seq=++_searchSeq;
+  if(_searchAbort) _searchAbort.abort();
+  _searchAbort = window.AbortController ? new AbortController() : null;
+  var signal = _searchAbort ? _searchAbort.signal : undefined;
   var url='/api/search?q='+encodeURIComponent(q);
   if(_searchDeviceFilter)url+='&device='+encodeURIComponent(_searchDeviceFilter);
-  fetchSearchJson(url, false)
+  fetchSearchJson(url, 0, signal)
     .then(function(d){
       if(seq!==_searchSeq)return;
       _searchDeviceCounts=d.device_counts||{};
@@ -543,6 +550,7 @@ function doSearch(q){
     })
     .catch(function(e){
       if(seq!==_searchSeq)return;
+      if(e && e.name === 'AbortError') return;
       console.error('search failed', e);
       $$('results').innerHTML='<div class="status-box" style="color:#c62828"><span class="status-icon">⚠️</span><p>搜索失败，请重试</p><p style="font-size:12px;color:#777">'+esc(e&&e.message?e.message:e)+'</p></div>';
     });

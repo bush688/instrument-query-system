@@ -281,6 +281,7 @@ let _manifestCache = null, _manifestCacheTs = 0, _manifestCacheVersion = '';
 let _tagMetaCache  = null, _tagMetaCacheTs  = 0, _tagMetaCacheVersion = '';
 let _tagListCache = null, _tagListCacheTs = 0, _tagListCacheVersion = '';
 let _searchIndexCache = null, _searchIndexCacheTs = 0, _searchIndexCacheVersion = '';
+let _loopTailIndexCache = null, _loopTailIndexCacheVersion = '';
 const LARGE_CACHE_TTL_MS = 6 * 60 * 60 * 1000;
 const VERSION_CHECK_TTL_MS = 30_000;
 
@@ -378,7 +379,20 @@ function reviveSearchIndex(data) {
   };
 }
 
-async function getSearchIndex(env, manifest, tagMeta) {
+function buildLightweightSearchIndex(manifest) {
+  const allTags = manifest?.tags || {};
+  return {
+    degraded: true,
+    groups: {},
+    tags: Object.keys(allTags).filter(t => !isHiddenDeviceTag(t)),
+    descEntries: [],
+    metaByTag: {},
+    tagDevice: new Map(),
+    groupSingleLocationRefs: Object.create(null),
+  };
+}
+
+async function getSearchIndex(env, manifest, tagMeta, options = {}) {
   const now = Date.now();
   const version = _manifestCacheVersion || String(manifest?.version || '') || await env.META.get('version') || '';
   if (_searchIndexCache && _searchIndexCacheVersion === version && (now - _searchIndexCacheTs) < LARGE_CACHE_TTL_MS) return _searchIndexCache;
@@ -392,7 +406,19 @@ async function getSearchIndex(env, manifest, tagMeta) {
       return _searchIndexCache;
     }
   } catch (e) {
-    console.error('search_index load failed; using runtime fallback', e);
+    console.error('search_index load failed; using cached/lightweight fallback', e);
+    if (_searchIndexCache) {
+      _searchIndexCacheTs = now;
+      return _searchIndexCache;
+    }
+  }
+  if (_searchIndexCache) {
+    console.warn('search_index missing or invalid; using stale cached index');
+    _searchIndexCacheTs = now;
+    return _searchIndexCache;
+  }
+  if (options.allowRuntimeFallback !== true) {
+    return buildLightweightSearchIndex(manifest);
   }
   const tagList = await getTagList(env, manifest);
   const groups = tagList.groups || {};
@@ -672,6 +698,22 @@ function firstLocationInfo(docRefs, docs) {
   return normalizeLocationInfo({ location_floor: '', location_floor_el: '', location_floor_name: '', location_floor_source: '' });
 }
 
+function getLoopTailIndex(allTags) {
+  const version = _manifestCacheVersion || '';
+  if (_loopTailIndexCache && _loopTailIndexCacheVersion === version) return _loopTailIndexCache;
+  const index = new Map();
+  for (const candidate of Object.keys(allTags || {})) {
+    const cm = String(candidate).match(/^(\d{2})[A-Z]+-(\d{4,5}[A-Z]?)$/);
+    if (!cm) continue;
+    const key = `${cm[1]}::${cm[2]}`;
+    if (!index.has(key)) index.set(key, []);
+    index.get(key).push(candidate);
+  }
+  _loopTailIndexCache = index;
+  _loopTailIndexCacheVersion = version;
+  return _loopTailIndexCache;
+}
+
 function inferLoopLocationInfo(tag, allTags, docs, tagMeta, searchIndex) {
   if (isLocalGaugeTag(tag)) {
     return normalizeLocationInfo({ location_floor: '', location_floor_el: '', location_floor_name: '', location_floor_source: '' });
@@ -681,10 +723,9 @@ function inferLoopLocationInfo(tag, allTags, docs, tagMeta, searchIndex) {
   const prefix = m[1];
   const tail = m[2];
   const floors = new Map();
-  for (const candidate of Object.keys(allTags || {})) {
+  const candidateTags = getLoopTailIndex(allTags).get(`${prefix}::${tail}`) || [];
+  for (const candidate of candidateTags) {
     if (candidate === tag) continue;
-    const cm = String(candidate).match(/^(\d{2})[A-Z]+-(\d{4,5}[A-Z]?)$/);
-    if (!cm || cm[1] !== prefix || cm[2] !== tail) continue;
     const aliases = getAliases(candidate).filter(a => allTags[a]);
     const metaEntry = lookupMeta(tagMeta, candidate)
       || aliases.reduce((found, a) => found || lookupMeta(tagMeta, a), null);
@@ -845,7 +886,7 @@ export default {
       let searchIndex = null;
       let tagMeta = null;
       try {
-        searchIndex = await getSearchIndex(env, manifest, manifest.tag_meta || {});
+        searchIndex = await getSearchIndex(env, manifest, manifest.tag_meta || {}, { allowRuntimeFallback: false });
       } catch (e) {
         console.error('getSearchIndex failed; using lightweight fallback', e);
         searchIndex = {
@@ -857,11 +898,11 @@ export default {
         };
       }
       tagMeta = searchIndex.metaByTag || manifest.tag_meta || {};
-      if (needsDescSearch && (!searchIndex.descEntries?.length || !Object.keys(tagMeta).length)) {
+      if (needsDescSearch && !searchIndex.degraded && (!searchIndex.descEntries?.length || !Object.keys(tagMeta).length)) {
         const loadedTagMeta = await getTagMeta(env);
         tagMeta = loadedTagMeta || tagMeta || {};
         if (!searchIndex.descEntries?.length) {
-          searchIndex = await getSearchIndex(env, manifest, tagMeta);
+          searchIndex = await getSearchIndex(env, manifest, tagMeta, { allowRuntimeFallback: false });
         }
       }
       const tags = searchIndex.tags && searchIndex.tags.length
@@ -1043,7 +1084,7 @@ export default {
       }
 
       // 合并别名（FE <-> FT）的文档引用
-      const searchIndex = await getSearchIndex(env, manifest, tagMeta);
+      const searchIndex = await getSearchIndex(env, manifest, tagMeta, { allowRuntimeFallback: false });
       const docRefs = mergeDocRefsWithLocationFallback(tag, aliases, tagMetaEntry, allTags, searchIndex);
 
       const location_docs = [];
@@ -1246,6 +1287,8 @@ export default {
       const body = await request.json();
       await env.META.put('version', String(body.version));
       await env.META.put('updated_at', new Date().toISOString());
+      _loopTailIndexCache = null;
+      _loopTailIndexCacheVersion = '';
       return json({ ok: true });
     }
 
@@ -1261,6 +1304,8 @@ export default {
       _tagListCacheTs = 0;
       _searchIndexCache = null;
       _searchIndexCacheTs = 0;
+      _loopTailIndexCache = null;
+      _loopTailIndexCacheVersion = '';
       return json({ ok: true, tags: Object.keys(body.tags || {}).length });
     }
 
@@ -1283,6 +1328,8 @@ export default {
       _tagListCacheTs = 0;
       _searchIndexCache = null;
       _searchIndexCacheTs = 0;
+      _loopTailIndexCache = null;
+      _loopTailIndexCacheVersion = '';
       return m.version;
     }
 
